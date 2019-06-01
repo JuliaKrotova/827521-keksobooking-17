@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Юлия Кротова](https://up.htmlacademy.ru/javascript/17/user/827521).
-* Наставник: `Неизвестно`.
+* Наставник: `Андрей Вершинин`.
 
 ---
 
