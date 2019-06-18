@@ -2,11 +2,36 @@
 
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var PIN_MAIN_WIDTH = 32;
+var PIN_MAIN_HEIGHT = 32;
+var locationPinMainX = 570;
+var locationPinMainY = 375;
 
-var mapPinsList = document.querySelector('.map__pins');
+var mapPinsListElement = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
+
+var fieldsetElements = document.querySelectorAll('.ad-form__element');
+var fieldsetHeaderElement = document.querySelector('.ad-form-header');
+var mapPinMainElement = document.querySelector('.map__pin--main');
+var formElement = document.querySelector('.ad-form');
+var addressElement = document.querySelector('#address');
+
+var showDisabledForm = function () {
+  for (var i = 0; i < fieldsetElements.length; i++) {
+    fieldsetElements[i].disabled = 'disabled';
+  }
+  fieldsetHeaderElement.disabled = 'disabled';
+};
+
+var showActiveForm = function () {
+  formElement.classList.remove('ad-form--disabled');
+  for (var i = 0; i < fieldsetElements.length; i++) {
+    fieldsetElements[i].disabled = false;
+  }
+  fieldsetHeaderElement.disabled = false;
+};
 
 var getMapPin = function (i) {
   var LOCATION_X_MIN = 0;
@@ -15,7 +40,7 @@ var getMapPin = function (i) {
   var LOCATION_Y_MAX = 630;
   var TYPES = ['palace', 'flat', 'house ', 'bungalo'];
 
-  var getRandomElement = function (array) {
+  var getRandomValueFrom = function (array) {
     return array[Math.round(Math.random() * (array.length - 1))];
   };
 
@@ -29,7 +54,7 @@ var getMapPin = function (i) {
       avatar: 'img/avatars/user' + '0' + i + '.png'
     },
     offer: {
-      type: getRandomElement(TYPES)
+      type: getRandomValueFrom(TYPES)
     },
     location: {
       x: getRandomNumber(LOCATION_X_MIN, LOCATION_X_MAX),
@@ -67,9 +92,26 @@ var renderMapPins = function (mapPins) {
   for (var i = 0; i < mapPins.length; i++) {
     fragment.appendChild(renderMapPin(mapPins[i]));
   }
-  mapPinsList.appendChild(fragment);
+  mapPinsListElement.appendChild(fragment);
 };
 
-showActiveMap();
-var mapPins = getMapPins();
-renderMapPins(mapPins);
+var showActiveState = function () {
+  showActiveForm();
+  showActiveMap();
+  var mapPins = getMapPins();
+  renderMapPins(mapPins);
+};
+
+var addAddress = function () {
+  addressElement.value = (locationPinMainX + PIN_MAIN_WIDTH) + ', ' + (locationPinMainY + PIN_MAIN_HEIGHT);
+};
+
+mapPinMainElement.addEventListener('click', function () {
+  showActiveState();
+});
+
+mapPinMainElement.addEventListener('mouseup', function () {
+  addAddress();
+});
+
+showDisabledForm();
