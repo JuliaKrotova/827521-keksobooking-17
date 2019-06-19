@@ -16,14 +16,9 @@ var fieldsetElements = document.querySelectorAll('.ad-form__element');
 var fieldsetHeaderElement = document.querySelector('.ad-form-header');
 var mapPinMainElement = document.querySelector('.map__pin--main');
 var formElement = document.querySelector('.ad-form');
+var mapFilterSelectElements = document.querySelectorAll('.map__filter');
+var mapFeaturesElement = document.querySelector('.map__features');
 var addressElement = document.querySelector('#address');
-
-var showDisabledForm = function () {
-  for (var i = 0; i < fieldsetElements.length; i++) {
-    fieldsetElements[i].disabled = 'disabled';
-  }
-  fieldsetHeaderElement.disabled = 'disabled';
-};
 
 var showActiveForm = function () {
   formElement.classList.remove('ad-form--disabled');
@@ -31,6 +26,13 @@ var showActiveForm = function () {
     fieldsetElements[i].disabled = false;
   }
   fieldsetHeaderElement.disabled = false;
+};
+
+var showActiveMapFilters = function () {
+  for (var i = 0; i < mapFilterSelectElements.length; i++) {
+    mapFilterSelectElements[i].disabled = false;
+  }
+  mapFeaturesElement.disabled = false;
 };
 
 var getMapPin = function (i) {
@@ -97,12 +99,13 @@ var renderMapPins = function (mapPins) {
 
 var showActiveState = function () {
   showActiveForm();
+  showActiveMapFilters();
   showActiveMap();
   var mapPins = getMapPins();
   renderMapPins(mapPins);
 };
 
-var addAddress = function () {
+var setAddress = function () {
   addressElement.value = (locationPinMainX + PIN_MAIN_WIDTH) + ', ' + (locationPinMainY + PIN_MAIN_HEIGHT);
 };
 
@@ -111,7 +114,5 @@ mapPinMainElement.addEventListener('click', function () {
 });
 
 mapPinMainElement.addEventListener('mouseup', function () {
-  addAddress();
+  setAddress();
 });
-
-showDisabledForm();
