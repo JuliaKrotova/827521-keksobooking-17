@@ -21,8 +21,8 @@ var mapFeaturesElement = document.querySelector('.map__features');
 var addressElement = document.querySelector('#address');
 var priceElement = document.querySelector('#price');
 var typeAccommodationElement = document.querySelector('#type');
-var timeInElement = document.querySelector('#timein');
-var timeOutElement = document.querySelector('#timeout');
+var checkInTimeElement = document.querySelector('#timein');
+var checkOutTimeElement = document.querySelector('#timeout');
 
 var showActiveForm = function () {
   formElement.classList.remove('ad-form--disabled');
@@ -126,28 +126,33 @@ typeAccommodationElement.addEventListener('change', function () {
 });
 
 var setPrice = function (typeValue) {
-  if (typeValue === 'bungalo') {
-    priceElement.minlength = 0;
-    priceElement.placeholder = 0;
-  }
-  if (typeValue === 'flat') {
-    priceElement.minlength = 1000;
-    priceElement.placeholder = 1000;
-  }
-  if (typeValue === 'house') {
-    priceElement.minlength = 5000;
-    priceElement.placeholder = 5000;
-  }
-  if (typeValue === 'palace') {
-    priceElement.minlength = 10000;
-    priceElement.placeholder = 10000;
+  switch (typeValue) {
+    case 'bungalo':
+      priceElement.min = 0;
+      priceElement.placeholder = 0;
+      break;
+    case 'flat':
+      priceElement.min = 1000;
+      priceElement.placeholder = 1000;
+      break;
+    case 'house':
+      priceElement.min = 5000;
+      priceElement.placeholder = 5000;
+      break;
+    case 'palace':
+      priceElement.min = 10000;
+      priceElement.placeholder = 10000;
+      break;
+    default:
+      priceElement.min = 0;
+      priceElement.placeholder = 0;
   }
 };
 
-timeInElement.addEventListener('change', function () {
-  timeOutElement.value = timeInElement.value;
+checkInTimeElement.addEventListener('change', function () {
+  checkOutTimeElement.value = checkInTimeElement.value;
 });
 
-timeOutElement.addEventListener('change', function () {
-  timeInElement.value = timeOutElement.value;
+checkOutTimeElement.addEventListener('change', function () {
+  checkInTimeElement.value = checkOutTimeElement.value;
 });
