@@ -144,8 +144,7 @@ var setPrice = function (typeValue) {
       priceElement.placeholder = 10000;
       break;
     default:
-      priceElement.min = 0;
-      priceElement.placeholder = 0;
+      throw new Error('unknown type');
   }
 };
 
