@@ -19,6 +19,10 @@ var formElement = document.querySelector('.ad-form');
 var mapFilterSelectElements = document.querySelectorAll('.map__filter');
 var mapFeaturesElement = document.querySelector('.map__features');
 var addressElement = document.querySelector('#address');
+var priceElement = document.querySelector('#price');
+var typeAccommodationElement = document.querySelector('#type');
+var checkInTimeElement = document.querySelector('#timein');
+var checkOutTimeElement = document.querySelector('#timeout');
 
 var showActiveForm = function () {
   formElement.classList.remove('ad-form--disabled');
@@ -115,4 +119,39 @@ mapPinMainElement.addEventListener('click', function () {
 
 mapPinMainElement.addEventListener('mouseup', function () {
   setAddress();
+});
+
+typeAccommodationElement.addEventListener('change', function () {
+  setPrice(typeAccommodationElement.value);
+});
+
+var setPrice = function (typeValue) {
+  switch (typeValue) {
+    case 'bungalo':
+      priceElement.min = 0;
+      priceElement.placeholder = 0;
+      break;
+    case 'flat':
+      priceElement.min = 1000;
+      priceElement.placeholder = 1000;
+      break;
+    case 'house':
+      priceElement.min = 5000;
+      priceElement.placeholder = 5000;
+      break;
+    case 'palace':
+      priceElement.min = 10000;
+      priceElement.placeholder = 10000;
+      break;
+    default:
+      throw new Error('unknown type');
+  }
+};
+
+checkInTimeElement.addEventListener('change', function () {
+  checkOutTimeElement.value = checkInTimeElement.value;
+});
+
+checkOutTimeElement.addEventListener('change', function () {
+  checkInTimeElement.value = checkOutTimeElement.value;
 });
