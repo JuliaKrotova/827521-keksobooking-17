@@ -124,9 +124,7 @@ var onMouseDown = function (evt) {
     y: evt.clientY
   };
 
-  var onMouseMove = function (moveEvt) {
-    moveEvt.preventDefault();
-
+  var getEndCoords = function (moveEvt) {
     var shift = {
       x: startCoords.x - moveEvt.clientX,
       y: startCoords.y - moveEvt.clientY
@@ -141,6 +139,13 @@ var onMouseDown = function (evt) {
       x: (mapPinMainElement.offsetLeft - shift.x),
       y: (mapPinMainElement.offsetTop - shift.y)
     };
+    return endCoords;
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var endCoords = getEndCoords(moveEvt);
 
     if (endCoords.y >= PIN_MAIN_MIN_Y && endCoords.y <= PIN_MAIN_MAX_Y) {
       mapPinMainElement.style.top = endCoords.y + 'px';
@@ -154,17 +159,7 @@ var onMouseDown = function (evt) {
     upEvt.preventDefault();
 
     showActiveState();
-
-    var shift = {
-      x: startCoords.x - upEvt.clientX,
-      y: startCoords.y - upEvt.clientY
-    };
-
-    var endCoords = {
-      x: (mapPinMainElement.offsetLeft - shift.x),
-      y: (mapPinMainElement.offsetTop - shift.y)
-    };
-
+    var endCoords = getEndCoords(upEvt);
     setAddress(endCoords);
 
     document.removeEventListener('mousemove', onMouseMove);
