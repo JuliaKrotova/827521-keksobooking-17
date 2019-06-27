@@ -13,7 +13,7 @@
   var checkOutTimeElement = document.querySelector('#timeout');
 
 
-  window.showActiveForm = function () {
+  var showActiveForm = function () {
     formElement.classList.remove('ad-form--disabled');
     for (var i = 0; i < fieldsetElements.length; i++) {
       fieldsetElements[i].disabled = false;
@@ -21,7 +21,7 @@
     fieldsetHeaderElement.disabled = false;
   };
 
-  window.setAddress = function (endCoords) {
+  var setAddress = function (endCoords) {
     addressElement.value = (endCoords.x + PIN_MAIN_WIDTH) + ', ' + (endCoords.y + PIN_MAIN_HEIGHT);
   };
 
@@ -59,4 +59,9 @@
   checkOutTimeElement.addEventListener('change', function () {
     checkInTimeElement.value = checkOutTimeElement.value;
   });
+
+  window.form = {
+    showActiveForm: showActiveForm,
+    setAddress: setAddress
+  };
 })();

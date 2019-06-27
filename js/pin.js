@@ -51,13 +51,12 @@
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
-      window.showActiveState();
+      window.map.showActiveStatePage();
       var endCoords = getEndCoords(upEvt);
-      window.setAddress(endCoords);
+      window.form.setAddress(endCoords);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      mapPinMainElement.removeEventListener('mousedown', onMouseDown);
     };
 
     document.addEventListener('mousemove', onMouseMove);

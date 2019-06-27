@@ -32,11 +32,13 @@
     return mapPin;
   };
 
-  window.getMapPins = function () {
-    var mapPins = [];
-    for (var i = 0; i < 8; i++) {
-      mapPins.push(getMapPin(i + 1));
+  window.data = {
+    getData: function () {
+      var mapPins = [];
+      for (var i = 0; i < 8; i++) {
+        mapPins.push(getMapPin(i + 1));
+      }
+      return mapPins;
     }
-    return mapPins;
   };
 })();
