@@ -9,6 +9,10 @@
         .content
         .querySelector('.map__pin');
 
+  var errorTemplate = document.querySelector('#error')
+      .content
+      .querySelector('.error');
+
   var mapFilterSelectElements = document.querySelectorAll('.map__filter');
   var mapFeaturesElement = document.querySelector('.map__features');
 
@@ -42,13 +46,21 @@
     mapPinsListElement.appendChild(fragment);
   };
 
+  var onErrorHandler = function () {
+    var errorElement = errorTemplate.cloneNode(true);
+    document.body.insertAdjacentElement('afterbegin', errorElement);
+  };
+
+  var onLoadHandler = function (mapPins) {
+    renderMapPins(mapPins);
+  };
+
   window.map = {
     showActiveStatePage: function () {
       window.form.showActiveForm();
       showActiveMapFilters();
       showActiveMap();
-      var mapPins = window.data.getData();
-      renderMapPins(mapPins);
+      window.backend.load(onLoadHandler, onErrorHandler);
     }
   };
 })();

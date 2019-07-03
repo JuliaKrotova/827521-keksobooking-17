@@ -50,8 +50,6 @@
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
-
-      window.map.showActiveStatePage();
       var endCoords = getEndCoords(upEvt);
       window.form.setAddress(endCoords);
 
@@ -64,4 +62,12 @@
   };
 
   mapPinMainElement.addEventListener('mousedown', onMouseDown);
+
+  var onClick = function () {
+    window.map.showActiveStatePage();
+    mapPinMainElement.removeEventListener('click', onClick);
+  };
+
+  mapPinMainElement.addEventListener('click', onClick);
+
 })();
