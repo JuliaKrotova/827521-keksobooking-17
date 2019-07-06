@@ -4,6 +4,7 @@
   var mapPinsListElement = document.querySelector('.map__pins');
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
+  var mapPins = [];
 
   var pinTemplate = document.querySelector('#pin')
         .content
@@ -15,6 +16,8 @@
 
   var mapFilterSelectElements = document.querySelectorAll('.map__filter');
   var mapFeaturesElement = document.querySelector('.map__features');
+  var housingTypeElement = document.querySelector('#housing-type');
+  var housingType;
 
   var showActiveMapFilters = function () {
     for (var i = 0; i < mapFilterSelectElements.length; i++) {
@@ -38,10 +41,20 @@
     return mapPinElement;
   };
 
-  var renderMapPins = function (mapPins) {
+  var clearMapPins = function () {
+    var mapPinsElements = document.querySelectorAll('.map__pin');
+    for (var i = 0; i < mapPinsElements.length; i++) {
+      if (!mapPinsElements[i].classList.contains('map__pin--main')) {
+        mapPinsElements[i].remove();
+      }
+    }
+  };
+
+  var renderMapPins = function (filteredMapPins) {
+    clearMapPins();
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < mapPins.length; i++) {
-      fragment.appendChild(renderMapPin(mapPins[i]));
+    for (var j = 0; j < filteredMapPins.length; j++) {
+      fragment.appendChild(renderMapPin(filteredMapPins[j]));
     }
     mapPinsListElement.appendChild(fragment);
   };
@@ -51,8 +64,29 @@
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };
 
-  var onLoadHandler = function (mapPins) {
+  var onLoadHandler = function (data) {
+    mapPins = data;
+    mapPins = mapPins.filter(function (it, i) {
+      return i < 5;
+    });
     renderMapPins(mapPins);
+  };
+
+  housingTypeElement.addEventListener('change', function () {
+    housingType = housingTypeElement.value;
+    updateMapPins();
+  });
+
+  var updateMapPins = function () {
+    var sameMapPins;
+    if (housingType !== 'any') {
+      sameMapPins = mapPins.filter(function (it) {
+        return it.offer.type === housingType;
+      });
+    } else {
+      sameMapPins = mapPins;
+    }
+    renderMapPins(sameMapPins);
   };
 
   window.map = {
