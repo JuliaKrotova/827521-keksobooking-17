@@ -17,7 +17,7 @@
   var mapFilterSelectElements = document.querySelectorAll('.map__filter');
   var mapFeaturesElement = document.querySelector('.map__features');
   var housingTypeElement = document.querySelector('#housing-type');
-  var housingType;
+
 
   var showActiveMapFilters = function () {
     for (var i = 0; i < mapFilterSelectElements.length; i++) {
@@ -41,22 +41,23 @@
     return mapPinElement;
   };
 
-  var clearMapPins = function () {
-    var mapPinsElements = document.querySelectorAll('.map__pin');
-    for (var i = 0; i < mapPinsElements.length; i++) {
-      if (!mapPinsElements[i].classList.contains('map__pin--main')) {
-        mapPinsElements[i].remove();
-      }
-    }
-  };
-
   var renderMapPins = function (filteredMapPins) {
     clearMapPins();
     var fragment = document.createDocumentFragment();
-    for (var j = 0; j < filteredMapPins.length; j++) {
-      fragment.appendChild(renderMapPin(filteredMapPins[j]));
-    }
+    filteredMapPins = filteredMapPins.slice(0, 5);
+    filteredMapPins.forEach(function (filteredMapPin) {
+      fragment.appendChild(renderMapPin(filteredMapPin));
+    });
     mapPinsListElement.appendChild(fragment);
+  };
+
+  var clearMapPins = function () {
+    var mapPinsElements = document.querySelectorAll('.map__pin');
+    mapPinsElements.forEach(function (mapPinsElement) {
+      if (!mapPinsElement.matches('.map__pin--main')) {
+        mapPinsElement.remove();
+      }
+    });
   };
 
   var onErrorHandler = function () {
@@ -64,37 +65,23 @@
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };
 
-  var onLoadHandler = function (data) {
+  var onLoadSuccess = function (data) {
     mapPins = data;
-    mapPins = mapPins.filter(function (it, i) {
-      return i < 5;
-    });
-    renderMapPins(mapPins);
+    var filteredMapPins = window.filters.filterMapPins(mapPins);
+    renderMapPins(filteredMapPins);
   };
 
   housingTypeElement.addEventListener('change', function () {
-    housingType = housingTypeElement.value;
-    updateMapPins();
+    var filteredMapPins = window.filters.filterMapPins(mapPins);
+    renderMapPins(filteredMapPins);
   });
-
-  var updateMapPins = function () {
-    var sameMapPins;
-    if (housingType !== 'any') {
-      sameMapPins = mapPins.filter(function (it) {
-        return it.offer.type === housingType;
-      });
-    } else {
-      sameMapPins = mapPins;
-    }
-    renderMapPins(sameMapPins);
-  };
 
   window.map = {
     showActiveStatePage: function () {
       window.form.showActiveForm();
       showActiveMapFilters();
       showActiveMap();
-      window.backend.load(onLoadHandler, onErrorHandler);
+      window.backend.load(onLoadSuccess, onErrorHandler);
     }
   };
 })();
