@@ -4,6 +4,7 @@
   var mapPinsListElement = document.querySelector('.map__pins');
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
+  var mapPins = [];
 
   var pinTemplate = document.querySelector('#pin')
         .content
@@ -15,6 +16,8 @@
 
   var mapFilterSelectElements = document.querySelectorAll('.map__filter');
   var mapFeaturesElement = document.querySelector('.map__features');
+  var housingTypeElement = document.querySelector('#housing-type');
+
 
   var showActiveMapFilters = function () {
     for (var i = 0; i < mapFilterSelectElements.length; i++) {
@@ -38,12 +41,23 @@
     return mapPinElement;
   };
 
-  var renderMapPins = function (mapPins) {
+  var renderMapPins = function (filteredMapPins) {
+    clearMapPins();
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < mapPins.length; i++) {
-      fragment.appendChild(renderMapPin(mapPins[i]));
-    }
+    filteredMapPins = filteredMapPins.slice(0, 5);
+    filteredMapPins.forEach(function (filteredMapPin) {
+      fragment.appendChild(renderMapPin(filteredMapPin));
+    });
     mapPinsListElement.appendChild(fragment);
+  };
+
+  var clearMapPins = function () {
+    var mapPinsElements = document.querySelectorAll('.map__pin');
+    mapPinsElements.forEach(function (mapPinsElement) {
+      if (!mapPinsElement.matches('.map__pin--main')) {
+        mapPinsElement.remove();
+      }
+    });
   };
 
   var onErrorHandler = function () {
@@ -51,16 +65,23 @@
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };
 
-  var onLoadHandler = function (mapPins) {
-    renderMapPins(mapPins);
+  var onLoadSuccess = function (data) {
+    mapPins = data;
+    var filteredMapPins = window.filters.filterMapPins(mapPins);
+    renderMapPins(filteredMapPins);
   };
+
+  housingTypeElement.addEventListener('change', function () {
+    var filteredMapPins = window.filters.filterMapPins(mapPins);
+    renderMapPins(filteredMapPins);
+  });
 
   window.map = {
     showActiveStatePage: function () {
       window.form.showActiveForm();
       showActiveMapFilters();
       showActiveMap();
-      window.backend.load(onLoadHandler, onErrorHandler);
+      window.backend.load(onLoadSuccess, onErrorHandler);
     }
   };
 })();
