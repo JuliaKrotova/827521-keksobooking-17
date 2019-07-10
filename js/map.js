@@ -60,7 +60,7 @@
     });
   };
 
-  var onErrorHandler = function () {
+  var onLoadError = function () {
     var errorElement = errorTemplate.cloneNode(true);
     document.body.insertAdjacentElement('afterbegin', errorElement);
   };
@@ -69,6 +69,7 @@
     mapPins = data;
     var filteredMapPins = window.filters.filterMapPins(mapPins);
     renderMapPins(filteredMapPins);
+    window.card.renderCard(mapPins[0]);
   };
 
   housingTypeElement.addEventListener('change', function () {
@@ -81,7 +82,7 @@
       window.form.showActiveForm();
       showActiveMapFilters();
       showActiveMap();
-      window.backend.load(onLoadSuccess, onErrorHandler);
+      window.backend.load(onLoadSuccess, onLoadError);
     }
   };
 })();
