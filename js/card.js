@@ -9,27 +9,19 @@
     .content
     .querySelector('.map__card');
 
-  var getType = function (typeValue) {
-    switch (typeValue) {
-      case 'flat':
-        return 'Квартира';
-      case 'bungalo':
-        return 'Бунгало';
-      case 'house':
-        return 'Дом';
-      case 'palace':
-        return 'Дворец';
-      default:
-        throw new Error('unknown type');
-    }
+  var HousingType = {
+    flat: 'Квартира',
+    bungalo: 'Бунгало',
+    house: 'Дом',
+    palace: 'Дворец'
   };
 
   var renderFeatures = function (popupFeaturesElement, features) {
     popupFeaturesElement.innerText = '';
     features.forEach(function (feature) {
-      var liElement = document.createElement('li');
-      liElement.classList.add('popup__feature', 'popup__feature--' + feature);
-      popupFeaturesElement.appendChild(liElement);
+      var itemElement = document.createElement('li');
+      itemElement.classList.add('popup__feature', 'popup__feature--' + feature);
+      popupFeaturesElement.appendChild(itemElement);
     });
   };
 
@@ -52,7 +44,7 @@
       cardElement.querySelector('.popup__title').innerText = mapPin.offer.title;
       cardElement.querySelector('.popup__text--address').innerText = mapPin.offer.address;
       cardElement.querySelector('.popup__text--price').innerText = mapPin.offer.price + '₽/ночь';
-      cardElement.querySelector('.popup__type').innerText = getType(mapPin.offer.type);
+      cardElement.querySelector('.popup__type').innerText = HousingType[mapPin.offer.type];
       cardElement.querySelector('.popup__text--capacity').innerText = mapPin.offer.rooms + ' комнаты для ' + mapPin.offer.guests + ' гостей';
       cardElement.querySelector('.popup__text--time').innerText = 'Заезд после ' + mapPin.offer.checkin + ', выезд до ' + mapPin.offer.checkout;
       renderFeatures(cardElement.querySelector('.popup__features'), mapPin.offer.features);
