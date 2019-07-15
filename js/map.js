@@ -51,6 +51,8 @@
       fragment.appendChild(renderMapPin(filteredMapPin, index));
     });
     mapPinsListElement.appendChild(fragment);
+
+    addClickToMapPin();
   };
 
   var clearMapPins = function () {
@@ -71,7 +73,6 @@
     mapPins = data;
     filteredMapPins = window.filters.filterMapPins(mapPins);
     renderMapPins();
-    addClickToMapPin();
   };
 
 
@@ -85,7 +86,9 @@
 
   var onClick = function (evt) {
     var index = evt.currentTarget.getAttribute('data-id');
-    window.card.renderCard(filteredMapPins[index]);
+    if (index) {
+      window.card.renderCard(filteredMapPins[index]);
+    }
   };
 
   housingTypeElement.addEventListener('change', function () {
