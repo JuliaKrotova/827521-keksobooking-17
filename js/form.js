@@ -11,14 +11,17 @@
   var typeAccommodationElement = document.querySelector('#type');
   var checkInTimeElement = document.querySelector('#timein');
   var checkOutTimeElement = document.querySelector('#timeout');
+  var roomNumberElement = document.querySelector('#room_number');
+  var capacityElement = document.querySelector('#capacity');
 
 
   var showActiveForm = function () {
     formElement.classList.remove('ad-form--disabled');
-    for (var i = 0; i < fieldsetElements.length; i++) {
-      fieldsetElements[i].disabled = false;
-    }
+    fieldsetElements.forEach(function (fieldsetElement) {
+      fieldsetElement.disabled = false;
+    });
     fieldsetHeaderElement.disabled = false;
+    setRoomElementValidity();
   };
 
   var setAddress = function (endCoords) {
@@ -58,6 +61,22 @@
 
   checkOutTimeElement.addEventListener('change', function () {
     checkInTimeElement.value = checkOutTimeElement.value;
+  });
+
+  var setRoomElementValidity = function () {
+    if (roomNumberElement.value < capacityElement.value) {
+      roomNumberElement.setCustomValidity('Количество комнат не может быть меньше количества гостей');
+    } else {
+      roomNumberElement.setCustomValidity('');
+    }
+  };
+
+  roomNumberElement.addEventListener('change', function () {
+    setRoomElementValidity();
+  });
+
+  capacityElement.addEventListener('change', function () {
+    setRoomElementValidity();
   });
 
   window.form = {
