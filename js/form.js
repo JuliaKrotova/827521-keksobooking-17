@@ -4,6 +4,7 @@
   var fieldsetElements = document.querySelectorAll('.ad-form__element');
   var fieldsetHeaderElement = document.querySelector('.ad-form-header');
   var formElement = document.querySelector('.ad-form');
+  var titleElement = document.querySelector('#title');
   var addressElement = document.querySelector('#address');
   var priceElement = document.querySelector('#price');
   var PIN_MAIN_WIDTH = 32;
@@ -11,14 +12,18 @@
   var typeAccommodationElement = document.querySelector('#type');
   var checkInTimeElement = document.querySelector('#timein');
   var checkOutTimeElement = document.querySelector('#timeout');
+  var roomNumberElement = document.querySelector('#room_number');
+  var capacityElement = document.querySelector('#capacity');
+  var submitElement = document.querySelector('.ad-form__submit');
 
 
   var showActiveForm = function () {
     formElement.classList.remove('ad-form--disabled');
-    for (var i = 0; i < fieldsetElements.length; i++) {
-      fieldsetElements[i].disabled = false;
-    }
+    fieldsetElements.forEach(function (fieldsetElement) {
+      fieldsetElement.disabled = false;
+    });
     fieldsetHeaderElement.disabled = false;
+    setRoomElementValidity();
   };
 
   var setAddress = function (endCoords) {
@@ -59,6 +64,48 @@
   checkOutTimeElement.addEventListener('change', function () {
     checkInTimeElement.value = checkOutTimeElement.value;
   });
+
+  var setRoomElementValidity = function () {
+    if (isRoomElementInvalid()) {
+      roomNumberElement.setCustomValidity('Количество комнат не соответствует количеству гостей');
+    } else {
+      roomNumberElement.setCustomValidity('');
+    }
+  };
+
+  var isRoomElementInvalid = function () {
+    return roomNumberElement.value < capacityElement.value ||
+    roomNumberElement.value === 100 && capacityElement.value !== 0;
+  };
+
+  roomNumberElement.addEventListener('change', function () {
+    setRoomElementValidity();
+  });
+
+  capacityElement.addEventListener('change', function () {
+    setRoomElementValidity();
+  });
+
+  submitElement.addEventListener('click', function () {
+    validateRequiredElement(titleElement);
+    validateRequiredElement(priceElement);
+
+    if (isRoomElementInvalid()) {
+      roomNumberElement.classList.add('input-error');
+      capacityElement.classList.add('input-error');
+    } else {
+      roomNumberElement.classList.remove('input-error');
+      capacityElement.classList.remove('input-error');
+    }
+  });
+
+  var validateRequiredElement = function (element) {
+    if (!element.value) {
+      element.classList.add('input-error');
+    } else {
+      element.classList.remove('input-error');
+    }
+  };
 
   window.form = {
     showActiveForm: showActiveForm,
