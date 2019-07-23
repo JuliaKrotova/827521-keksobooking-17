@@ -68,6 +68,16 @@
     mapPinMainElement.removeEventListener('click', onClick);
   };
 
-  mapPinMainElement.addEventListener('click', onClick);
+  var showDisabledMapPinMain = function () {
+    mapPinMainElement.style.left = '570px';
+    mapPinMainElement.style.top = '375px';
+    mapPinMainElement.addEventListener('click', onClick);
+  };
+
+  showDisabledMapPinMain();
+
+  window.pin = {
+    showDisabledMapPinMain: showDisabledMapPinMain
+  };
 
 })();

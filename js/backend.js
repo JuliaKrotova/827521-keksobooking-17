@@ -2,6 +2,7 @@
 
 (function () {
   var UrlGet = 'https://js.dump.academy/keksobooking/data';
+  var UrlPost = 'https://js.dump.academy/keksobooking';
 
   window.backend = {
     load: function (onLoad, onError) {
@@ -9,6 +10,11 @@
       xhr.timeout = 10000;
       xhr.open('GET', UrlGet);
       xhr.send();
+    },
+    save: function (data, onLoad, onError) {
+      var xhr = createRequest(onLoad, onError);
+      xhr.open('POST', UrlPost);
+      xhr.send(data);
     }
   };
 

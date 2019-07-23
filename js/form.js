@@ -9,13 +9,24 @@
   var priceElement = document.querySelector('#price');
   var PIN_MAIN_WIDTH = 32;
   var PIN_MAIN_HEIGHT = 32;
+  var ESC_KEYCODE = 27;
   var typeAccommodationElement = document.querySelector('#type');
   var checkInTimeElement = document.querySelector('#timein');
   var checkOutTimeElement = document.querySelector('#timeout');
   var roomNumberElement = document.querySelector('#room_number');
   var capacityElement = document.querySelector('#capacity');
   var submitElement = document.querySelector('.ad-form__submit');
+  var mainElement = document.querySelector('main');
+  var mapElement = document.querySelector('.map');
+  var errorButtonElement = document.querySelector('.error__button');
 
+  var messageSuccessTemplate = document.querySelector('#success')
+    .content
+    .querySelector('.success');
+
+  var messageErrorTemplate = document.querySelector('#error')
+      .content
+      .querySelector('.error');
 
   var showActiveForm = function () {
     formElement.classList.remove('ad-form--disabled');
@@ -24,6 +35,26 @@
     });
     fieldsetHeaderElement.disabled = false;
     setRoomElementValidity();
+  };
+
+  var showDisabledForm = function () {
+    formElement.classList.add('ad-form--disabled');
+    fieldsetElements.forEach(function (fieldsetElement) {
+      fieldsetElement.disabled = true;
+    });
+    fieldsetHeaderElement.disabled = true;
+    titleElement.value = '';
+    priceElement.value = '';
+    typeAccommodationElement.value = 'flat';
+    roomNumberElement.value = '1';
+    capacityElement.value = '3';
+    checkInTimeElement.value = '12:00';
+    checkOutTimeElement.value = '12:00';
+    resetAdress();
+  };
+
+  var resetAdress = function () {
+    addressElement.value = '570, 375';
   };
 
   var setAddress = function (endCoords) {
@@ -66,11 +97,8 @@
   });
 
   var setRoomElementValidity = function () {
-    if (isRoomElementInvalid()) {
-      roomNumberElement.setCustomValidity('Количество комнат не соответствует количеству гостей');
-    } else {
-      roomNumberElement.setCustomValidity('');
-    }
+    return isRoomElementInvalid() ? roomNumberElement.setCustomValidity('Количество комнат не соответствует количеству гостей')
+      : roomNumberElement.setCustomValidity('');
   };
 
   var isRoomElementInvalid = function () {
@@ -107,8 +135,79 @@
     }
   };
 
+  formElement.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(formElement), onSubmitSuccess, onSubmitError);
+    evt.preventDefault();
+  });
+
+  var onSubmitSuccess = function () {
+    showDisabledForm();
+    window.card.removeCard();
+    window.map.clearMapPins();
+    window.map.showDisabledMap();
+    window.pin.showDisabledMapPinMain();
+    renderMessageSuccess();
+  };
+
+  var renderMessageSuccess = function () {
+    var messageSuccessElement = messageSuccessTemplate.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(messageSuccessElement);
+    mainElement.insertBefore(fragment, mapElement);
+
+    document.addEventListener('keydown', onMessageSuccessEscPress);
+    document.addEventListener('click', function () {
+      removeMessageSuccess();
+    });
+  };
+
+  var onMessageSuccessEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      removeMessageSuccess();
+      document.removeEventListener('keydown', onMessageSuccessEscPress);
+    }
+  };
+
+  var removeMessageSuccess = function () {
+    var existingMessageSuccessElement = document.querySelector('.success');
+    if (existingMessageSuccessElement) {
+      existingMessageSuccessElement.remove();
+    }
+  };
+
+  var onSubmitError = function () {
+    var messageErrorElement = messageErrorTemplate.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(messageErrorElement);
+    mainElement.insertBefore(fragment, mapElement);
+
+    document.addEventListener('keydown', onMessageErrorEscPress);
+    document.addEventListener('click', function () {
+      removeMessageError();
+    });
+    errorButtonElement.addEventListener('click', function () {
+      removeMessageError();
+    });
+  };
+
+  var onMessageErrorEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      removeMessageError();
+      document.removeEventListener('keydown', onMessageErrorEscPress);
+    }
+  };
+
+  var removeMessageError = function () {
+    var existingMessageErrorElement = document.querySelector('.error');
+    if (existingMessageErrorElement) {
+      existingMessageErrorElement.remove();
+    }
+  };
+
   window.form = {
     showActiveForm: showActiveForm,
     setAddress: setAddress
   };
+
+  resetAdress();
 })();

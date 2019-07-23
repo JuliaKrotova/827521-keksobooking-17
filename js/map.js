@@ -18,7 +18,19 @@
   var mapFilterSelectElements = document.querySelectorAll('.map__filter');
   var mapFeaturesElement = document.querySelector('.map__features');
   var housingTypeElement = document.querySelector('#housing-type');
+  var mapSectionElement = document.querySelector('.map');
 
+  var showActiveStatePage = function () {
+    window.form.showActiveForm();
+    showActiveMapFilters();
+    showActiveMap();
+    window.backend.load(onLoadSuccess, window.map.onLoadError);
+  };
+
+  var onLoadError = function () {
+    var errorElement = errorTemplate.cloneNode(true);
+    document.body.insertAdjacentElement('afterbegin', errorElement);
+  };
 
   var showActiveMapFilters = function () {
     for (var i = 0; i < mapFilterSelectElements.length; i++) {
@@ -28,8 +40,11 @@
   };
 
   var showActiveMap = function () {
-    var element = document.querySelector('.map');
-    element.classList.remove('map--faded');
+    mapSectionElement.classList.remove('map--faded');
+  };
+
+  var showDisabledMap = function () {
+    mapSectionElement.classList.add('map--faded');
   };
 
   var renderMapPin = function (mapPin, index) {
@@ -64,11 +79,6 @@
     });
   };
 
-  var onLoadError = function () {
-    var errorElement = errorTemplate.cloneNode(true);
-    document.body.insertAdjacentElement('afterbegin', errorElement);
-  };
-
   var onLoadSuccess = function (data) {
     mapPins = data;
     filteredMapPins = window.filters.filterMapPins(mapPins);
@@ -97,11 +107,9 @@
   });
 
   window.map = {
-    showActiveStatePage: function () {
-      window.form.showActiveForm();
-      showActiveMapFilters();
-      showActiveMap();
-      window.backend.load(onLoadSuccess, onLoadError);
-    }
+    showActiveStatePage: showActiveStatePage,
+    onLoadError: onLoadError,
+    clearMapPins: clearMapPins,
+    showDisabledMap: showDisabledMap
   };
 })();
