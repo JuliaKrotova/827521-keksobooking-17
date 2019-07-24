@@ -18,7 +18,11 @@
   var mapFilterSelectElements = document.querySelectorAll('.map__filter');
   var mapFeaturesElement = document.querySelector('.map__features');
   var housingTypeElement = document.querySelector('#housing-type');
+  var housingPriceElement = document.querySelector('#housing-price');
+  var housingRoomsElement = document.querySelector('#housing-rooms');
+  var housingGuestsElement = document.querySelector('#housing-guests');
   var mapSectionElement = document.querySelector('.map');
+  var housingFeaturesElement = document.querySelector('#housing-features');
 
   var showActiveStatePage = function () {
     window.form.showActiveForm();
@@ -81,7 +85,7 @@
 
   var onLoadSuccess = function (data) {
     mapPins = data;
-    filteredMapPins = window.filters.filterMapPins(mapPins);
+    filteredMapPins = window.filters.applyFilter(mapPins);
     renderMapPins();
   };
 
@@ -101,9 +105,34 @@
     }
   };
 
+  var renderMapPinsDebounced = window.debounce(renderMapPins);
+
   housingTypeElement.addEventListener('change', function () {
-    filteredMapPins = window.filters.filterMapPins(mapPins);
-    renderMapPins();
+    filteredMapPins = window.filters.applyFilter(mapPins);
+    renderMapPinsDebounced();
+  });
+
+  housingPriceElement.addEventListener('change', function () {
+    filteredMapPins = window.filters.applyFilter(mapPins);
+    renderMapPinsDebounced();
+  });
+
+  housingRoomsElement.addEventListener('change', function () {
+    filteredMapPins = window.filters.applyFilter(mapPins);
+    renderMapPinsDebounced();
+  });
+
+  housingGuestsElement.addEventListener('change', function () {
+    filteredMapPins = window.filters.applyFilter(mapPins);
+    renderMapPinsDebounced();
+  });
+
+  var housingFeaturesCheckboxElement = housingFeaturesElement.querySelectorAll('input');
+  housingFeaturesCheckboxElement.forEach(function (housingFeatureCheckboxElement) {
+    housingFeatureCheckboxElement.addEventListener('change', function () {
+      filteredMapPins = window.filters.applyFilter(mapPins);
+      renderMapPinsDebounced();
+    });
   });
 
   window.map = {
