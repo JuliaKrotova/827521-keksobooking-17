@@ -37,9 +37,9 @@
   };
 
   var showActiveMapFilters = function () {
-    for (var i = 0; i < mapFilterSelectElements.length; i++) {
-      mapFilterSelectElements[i].disabled = false;
-    }
+    mapFilterSelectElements.forEach(function (mapFilterSelectElement) {
+      mapFilterSelectElement.disabled = false;
+    });
     mapFeaturesElement.disabled = false;
   };
 

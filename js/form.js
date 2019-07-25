@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ROOM_VALIDATION_ERROR = 'Количество комнат не соответствует количеству гостей';
   var fieldsetElements = document.querySelectorAll('.ad-form__element');
   var fieldsetHeaderElement = document.querySelector('.ad-form-header');
   var formElement = document.querySelector('.ad-form');
@@ -19,6 +20,7 @@
   var mainElement = document.querySelector('main');
   var mapElement = document.querySelector('.map');
   var errorButtonElement = document.querySelector('.error__button');
+  var descriptionElement = document.querySelector('#description');
 
   var messageSuccessTemplate = document.querySelector('#success')
     .content
@@ -50,11 +52,14 @@
     capacityElement.value = '3';
     checkInTimeElement.value = '12:00';
     checkOutTimeElement.value = '12:00';
-    resetAdress();
-  };
+    addressElement.value = '';
+    descriptionElement.value = '';
 
-  var resetAdress = function () {
-    addressElement.value = '570, 375';
+    var housingFeaturesElement = document.querySelector('.features');
+    var housingFeaturesCheckedElement = housingFeaturesElement.querySelectorAll('.feature__checkbox');
+    housingFeaturesCheckedElement.forEach(function (housingFeatureCheckedElement) {
+      housingFeatureCheckedElement.checked = false;
+    });
   };
 
   var setAddress = function (endCoords) {
@@ -97,8 +102,8 @@
   });
 
   var setRoomElementValidity = function () {
-    return isRoomElementInvalid() ? roomNumberElement.setCustomValidity('Количество комнат не соответствует количеству гостей')
-      : roomNumberElement.setCustomValidity('');
+    var error = isRoomElementInvalid() ? ROOM_VALIDATION_ERROR : '';
+    roomNumberElement.setCustomValidity(error);
   };
 
   var isRoomElementInvalid = function () {
@@ -156,9 +161,7 @@
     mainElement.insertBefore(fragment, mapElement);
 
     document.addEventListener('keydown', onMessageSuccessEscPress);
-    document.addEventListener('click', function () {
-      removeMessageSuccess();
-    });
+    document.addEventListener('click', onMessageSuccessClick);
   };
 
   var onMessageSuccessEscPress = function (evt) {
@@ -168,10 +171,15 @@
     }
   };
 
+  var onMessageSuccessClick = function () {
+    removeMessageSuccess();
+  };
+
   var removeMessageSuccess = function () {
     var existingMessageSuccessElement = document.querySelector('.success');
     if (existingMessageSuccessElement) {
       existingMessageSuccessElement.remove();
+      document.removeEventListener('click', onMessageSuccessClick);
     }
   };
 
@@ -182,9 +190,7 @@
     mainElement.insertBefore(fragment, mapElement);
 
     document.addEventListener('keydown', onMessageErrorEscPress);
-    document.addEventListener('click', function () {
-      removeMessageError();
-    });
+    document.addEventListener('click', onMessageErrorClick);
     errorButtonElement.addEventListener('click', function () {
       removeMessageError();
     });
@@ -197,10 +203,15 @@
     }
   };
 
+  var onMessageErrorClick = function () {
+    removeMessageError();
+  };
+
   var removeMessageError = function () {
     var existingMessageErrorElement = document.querySelector('.error');
     if (existingMessageErrorElement) {
       existingMessageErrorElement.remove();
+      document.removeEventListener('click', onMessageErrorClick);
     }
   };
 
@@ -209,5 +220,4 @@
     setAddress: setAddress
   };
 
-  resetAdress();
 })();
