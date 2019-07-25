@@ -15,14 +15,10 @@
       .content
       .querySelector('.error');
 
+  var formFilterElement = document.querySelector('.map__filters');
   var mapFilterSelectElements = document.querySelectorAll('.map__filter');
   var mapFeaturesElement = document.querySelector('.map__features');
-  var housingTypeElement = document.querySelector('#housing-type');
-  var housingPriceElement = document.querySelector('#housing-price');
-  var housingRoomsElement = document.querySelector('#housing-rooms');
-  var housingGuestsElement = document.querySelector('#housing-guests');
   var mapSectionElement = document.querySelector('.map');
-  var housingFeaturesElement = document.querySelector('#housing-features');
 
   var showActiveStatePage = function () {
     window.form.showActiveForm();
@@ -37,10 +33,17 @@
   };
 
   var showActiveMapFilters = function () {
-    mapFilterSelectElements.forEach(function (mapFilterSelectElement) {
-      mapFilterSelectElement.disabled = false;
+    mapFilterSelectElements.forEach(function (element) {
+      element.disabled = false;
     });
     mapFeaturesElement.disabled = false;
+  };
+
+  var showDisabledMapFilters = function () {
+    mapFilterSelectElements.forEach(function (element) {
+      element.disabled = true;
+    });
+    mapFeaturesElement.disabled = true;
   };
 
   var showActiveMap = function () {
@@ -107,38 +110,17 @@
 
   var renderMapPinsDebounced = window.debounce(renderMapPins);
 
-  housingTypeElement.addEventListener('change', function () {
+  formFilterElement.addEventListener('change', function () {
     filteredMapPins = window.filters.applyFilter(mapPins);
     renderMapPinsDebounced();
   });
 
-  housingPriceElement.addEventListener('change', function () {
-    filteredMapPins = window.filters.applyFilter(mapPins);
-    renderMapPinsDebounced();
-  });
-
-  housingRoomsElement.addEventListener('change', function () {
-    filteredMapPins = window.filters.applyFilter(mapPins);
-    renderMapPinsDebounced();
-  });
-
-  housingGuestsElement.addEventListener('change', function () {
-    filteredMapPins = window.filters.applyFilter(mapPins);
-    renderMapPinsDebounced();
-  });
-
-  var housingFeaturesCheckboxElement = housingFeaturesElement.querySelectorAll('input');
-  housingFeaturesCheckboxElement.forEach(function (housingFeatureCheckboxElement) {
-    housingFeatureCheckboxElement.addEventListener('change', function () {
-      filteredMapPins = window.filters.applyFilter(mapPins);
-      renderMapPinsDebounced();
-    });
-  });
 
   window.map = {
     showActiveStatePage: showActiveStatePage,
     onLoadError: onLoadError,
     clearMapPins: clearMapPins,
-    showDisabledMap: showDisabledMap
+    showDisabledMap: showDisabledMap,
+    showDisabledMapFilters: showDisabledMapFilters
   };
 })();

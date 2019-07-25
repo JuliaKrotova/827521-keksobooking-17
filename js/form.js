@@ -151,6 +151,7 @@
     window.map.clearMapPins();
     window.map.showDisabledMap();
     window.pin.showDisabledMapPinMain();
+    window.map.showDisabledMapFilters();
     renderMessageSuccess();
   };
 
