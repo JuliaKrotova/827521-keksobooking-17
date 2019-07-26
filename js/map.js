@@ -15,21 +15,43 @@
       .content
       .querySelector('.error');
 
+  var formFilterElement = document.querySelector('.map__filters');
   var mapFilterSelectElements = document.querySelectorAll('.map__filter');
   var mapFeaturesElement = document.querySelector('.map__features');
-  var housingTypeElement = document.querySelector('#housing-type');
+  var mapSectionElement = document.querySelector('.map');
 
+  var showActiveStatePage = function () {
+    window.form.showActiveForm();
+    showActiveMapFilters();
+    showActiveMap();
+    window.backend.load(onLoadSuccess, window.map.onLoadError);
+  };
+
+  var onLoadError = function () {
+    var errorElement = errorTemplate.cloneNode(true);
+    document.body.insertAdjacentElement('afterbegin', errorElement);
+  };
 
   var showActiveMapFilters = function () {
-    for (var i = 0; i < mapFilterSelectElements.length; i++) {
-      mapFilterSelectElements[i].disabled = false;
-    }
+    mapFilterSelectElements.forEach(function (element) {
+      element.disabled = false;
+    });
     mapFeaturesElement.disabled = false;
   };
 
+  var showDisabledMapFilters = function () {
+    mapFilterSelectElements.forEach(function (element) {
+      element.disabled = true;
+    });
+    mapFeaturesElement.disabled = true;
+  };
+
   var showActiveMap = function () {
-    var element = document.querySelector('.map');
-    element.classList.remove('map--faded');
+    mapSectionElement.classList.remove('map--faded');
+  };
+
+  var showDisabledMap = function () {
+    mapSectionElement.classList.add('map--faded');
   };
 
   var renderMapPin = function (mapPin, index) {
@@ -64,14 +86,9 @@
     });
   };
 
-  var onLoadError = function () {
-    var errorElement = errorTemplate.cloneNode(true);
-    document.body.insertAdjacentElement('afterbegin', errorElement);
-  };
-
   var onLoadSuccess = function (data) {
     mapPins = data;
-    filteredMapPins = window.filters.filterMapPins(mapPins);
+    filteredMapPins = window.filters.applyFilter(mapPins);
     renderMapPins();
   };
 
@@ -91,17 +108,19 @@
     }
   };
 
-  housingTypeElement.addEventListener('change', function () {
-    filteredMapPins = window.filters.filterMapPins(mapPins);
-    renderMapPins();
+  var renderMapPinsDebounced = window.debounce(renderMapPins);
+
+  formFilterElement.addEventListener('change', function () {
+    filteredMapPins = window.filters.applyFilter(mapPins);
+    renderMapPinsDebounced();
   });
 
+
   window.map = {
-    showActiveStatePage: function () {
-      window.form.showActiveForm();
-      showActiveMapFilters();
-      showActiveMap();
-      window.backend.load(onLoadSuccess, onLoadError);
-    }
+    showActiveStatePage: showActiveStatePage,
+    onLoadError: onLoadError,
+    clearMapPins: clearMapPins,
+    showDisabledMap: showDisabledMap,
+    showDisabledMapFilters: showDisabledMapFilters
   };
 })();

@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var PIN_MAIN_X = 570;
+  var PIN_MAIN_Y = 375;
   var PIN_MAIN_MIN_X = 0;
   var PIN_MAIN_MAX_X = 1200;
   var PIN_MAIN_MIN_Y = 130;
@@ -68,6 +70,16 @@
     mapPinMainElement.removeEventListener('click', onClick);
   };
 
-  mapPinMainElement.addEventListener('click', onClick);
+  var showDisabledMapPinMain = function () {
+    mapPinMainElement.style.left = PIN_MAIN_X + 'px';
+    mapPinMainElement.style.top = PIN_MAIN_Y + 'px';
+    mapPinMainElement.addEventListener('click', onClick);
+  };
+
+  showDisabledMapPinMain();
+
+  window.pin = {
+    showDisabledMapPinMain: showDisabledMapPinMain
+  };
 
 })();
