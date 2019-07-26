@@ -5,92 +5,60 @@
   var housingRoomsElement = document.querySelector('#housing-rooms');
   var housingGuestsElement = document.querySelector('#housing-guests');
   var housingFeaturesElement = document.querySelector('#housing-features');
+  var housingType;
+  var housingRooms;
+  var housingPrice;
+  var housingGuests;
+  var housingFeaturesCheckedElements;
+  var housingFeatures;
 
-  var housingTypeFilter = function (mapPins) {
-    var housingType = housingTypeElement.value;
-    var filteredMapPins;
-    if (housingType !== 'any') {
-      filteredMapPins = mapPins.filter(function (it) {
-        return it.offer.type === housingType;
-      });
-    } else {
-      filteredMapPins = mapPins;
-    }
-    return filteredMapPins;
+  var housingTypeFilter = function (pin) {
+    return housingType === 'any' || pin.offer.type === housingType;
   };
 
-  var housingPriceFilter = function (mapPins) {
-    var housingPrice = housingPriceElement.value;
-    var filteredMapPins;
-    if (housingPrice === 'middle') {
-      filteredMapPins = mapPins.filter(function (it) {
-        return it.offer.price >= 10000 && it.offer.price <= 50000;
-      });
-    } else if (housingPrice === 'low') {
-      filteredMapPins = mapPins.filter(function (it) {
-        return it.offer.price < 10000;
-      });
-    } else if (housingPrice === 'high') {
-      filteredMapPins = mapPins.filter(function (it) {
-        return it.offer.price > 50000;
-      });
-    } else {
-      filteredMapPins = mapPins;
+  var housingPriceFilter = function (pin) {
+    switch (housingPrice) {
+      case 'middle':
+        return pin.offer.price >= 10000 && pin.offer.price <= 50000;
+      case 'low':
+        return pin.offer.price < 10000;
+      case 'high':
+        return pin.offer.price > 50000;
+      default:
+        return true;
     }
-    return filteredMapPins;
   };
 
-  var housingRoomsFilter = function (mapPins) {
-    var housingRooms = parseInt(housingRoomsElement.value, 0);
-    var filteredMapPins;
-    if (!isNaN(housingRooms)) {
-      filteredMapPins = mapPins.filter(function (it) {
-        return it.offer.rooms === housingRooms;
-      });
-    } else {
-      filteredMapPins = mapPins;
-    }
-    return filteredMapPins;
+  var housingRoomsFilter = function (pin) {
+    return isNaN(housingRooms) || pin.offer.rooms === housingRooms;
   };
 
-  var housingGuestsFilter = function (mapPins) {
-    var housingGuests = parseInt(housingGuestsElement.value, 0);
-    var filteredMapPins;
-    if (!isNaN(housingGuests)) {
-      filteredMapPins = mapPins.filter(function (it) {
-        return it.offer.guests === housingGuests;
-      });
-    } else {
-      filteredMapPins = mapPins;
-    }
-    return filteredMapPins;
+  var housingGuestsFilter = function (pin) {
+    return isNaN(housingGuests) || pin.offer.guests === housingGuests;
   };
 
-  var housingFeaturesFilter = function (mapPins) {
-    var housingFeatures = [];
-    var housingFeaturesCheckedElement = housingFeaturesElement.querySelectorAll('input:checked');
-    housingFeaturesCheckedElement.forEach(function (housingFeatureCheckedElement) {
-      housingFeatures.push(housingFeatureCheckedElement.value);
+  var housingFeaturesFilter = function (pin) {
+    return housingFeatures.every(function (feature) {
+      return pin.offer.features.includes(feature);
     });
-    var filteredMapPins;
-    filteredMapPins = mapPins.filter(function (it) {
-      for (var i = 0; i < housingFeatures.length; i++) {
-        if (!it.offer.features.includes(housingFeatures[i])) {
-          return false;
-        }
-      }
-      return true;
-    });
-    return filteredMapPins;
   };
 
   var applyFilter = function (mapPins) {
-    var filteredMapPins = housingTypeFilter(mapPins);
-    filteredMapPins = housingPriceFilter(filteredMapPins);
-    filteredMapPins = housingRoomsFilter(filteredMapPins);
-    filteredMapPins = housingGuestsFilter(filteredMapPins);
-    filteredMapPins = housingFeaturesFilter(filteredMapPins);
-    return filteredMapPins;
+    housingType = housingTypeElement.value;
+    housingRooms = parseInt(housingRoomsElement.value, 0);
+    housingPrice = housingPriceElement.value;
+    housingGuests = parseInt(housingGuestsElement.value, 0);
+    housingFeaturesCheckedElements = Array.from(housingFeaturesElement.querySelectorAll('input:checked'));
+    housingFeatures = housingFeaturesCheckedElements.map(function (element) {
+      return element.value;
+    });
+
+    return mapPins
+  .filter(housingTypeFilter)
+  .filter(housingPriceFilter)
+  .filter(housingRoomsFilter)
+  .filter(housingGuestsFilter)
+  .filter(housingFeaturesFilter);
   };
 
   window.filters = {
