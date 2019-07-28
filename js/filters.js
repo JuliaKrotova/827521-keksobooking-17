@@ -45,9 +45,9 @@
 
   var applyFilter = function (mapPins) {
     housingType = housingTypeElement.value;
-    housingRooms = parseInt(housingRoomsElement.value, 0);
+    housingRooms = parseInt(housingRoomsElement.value, 10);
     housingPrice = housingPriceElement.value;
-    housingGuests = parseInt(housingGuestsElement.value, 0);
+    housingGuests = parseInt(housingGuestsElement.value, 10);
     housingFeaturesCheckedElements = Array.from(housingFeaturesElement.querySelectorAll('input:checked'));
     housingFeatures = housingFeaturesCheckedElements.map(function (element) {
       return element.value;
