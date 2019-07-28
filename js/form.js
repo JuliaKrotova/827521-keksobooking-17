@@ -22,7 +22,6 @@
   var errorButtonElement = document.querySelector('.error__button');
   var descriptionElement = document.querySelector('#description');
   var previewAvatarElement = document.querySelector('.ad-form-header__img');
-  var previewPhotoContainerElement = document.querySelector('.ad-form__photo-container');
 
   var messageSuccessTemplate = document.querySelector('#success')
     .content
