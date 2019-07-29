@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
-  var mapPinsListElement = document.querySelector('.map__pins');
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
+  var mapPinsListElement = document.querySelector('.map__pins');
   var mapPins = [];
   var filteredMapPins = [];
 
