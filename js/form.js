@@ -47,7 +47,7 @@
     });
     fieldsetHeaderElement.disabled = true;
     previewAvatarElement.src = 'img/muffin-grey.svg';
-    window.files.removePhoto();
+    window.uploadPreview.removePhoto();
     titleElement.value = '';
     priceElement.value = '';
     typeAccommodationElement.value = 'flat';

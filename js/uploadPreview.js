@@ -59,10 +59,6 @@
     });
   };
 
-  window.files = {
-    removePhoto: removePhoto
-  };
-
   var getDraggableElementIndex = function (element) {
     var photoArray = Array.from(document.querySelectorAll('.ad-form__photo img'));
     return photoArray.indexOf(element);
@@ -78,7 +74,10 @@
 
   var dragEnd = function () {
     var photoArray = Array.from(document.querySelectorAll('.ad-form__photo'));
-    photoArray[sourceDragIndex].remove();
     previewPhotoContainerElement.insertBefore(photoArray[sourceDragIndex], photoArray[destDragIndex]);
+  };
+
+  window.uploadPreview = {
+    removePhoto: removePhoto
   };
 })();
