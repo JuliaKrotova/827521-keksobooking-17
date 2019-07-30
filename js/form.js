@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var PIN_MAIN_WIDTH = 32;
+  var PIN_MAIN_HEIGHT = 32;
+  var ESC_KEYCODE = 27;
   var ROOM_VALIDATION_ERROR = 'Количество комнат не соответствует количеству гостей';
   var fieldsetElements = document.querySelectorAll('.ad-form__element');
   var fieldsetHeaderElement = document.querySelector('.ad-form-header');
@@ -8,9 +11,6 @@
   var titleElement = document.querySelector('#title');
   var addressElement = document.querySelector('#address');
   var priceElement = document.querySelector('#price');
-  var PIN_MAIN_WIDTH = 32;
-  var PIN_MAIN_HEIGHT = 32;
-  var ESC_KEYCODE = 27;
   var typeAccommodationElement = document.querySelector('#type');
   var checkInTimeElement = document.querySelector('#timein');
   var checkOutTimeElement = document.querySelector('#timeout');
@@ -21,6 +21,7 @@
   var mapElement = document.querySelector('.map');
   var errorButtonElement = document.querySelector('.error__button');
   var descriptionElement = document.querySelector('#description');
+  var previewAvatarElement = document.querySelector('.ad-form-header__img');
 
   var messageSuccessTemplate = document.querySelector('#success')
     .content
@@ -45,6 +46,8 @@
       fieldsetElement.disabled = true;
     });
     fieldsetHeaderElement.disabled = true;
+    previewAvatarElement.src = 'img/muffin-grey.svg';
+    window.uploadPreview.removePhoto();
     titleElement.value = '';
     priceElement.value = '';
     typeAccommodationElement.value = 'flat';
@@ -88,8 +91,6 @@
         priceElement.min = 10000;
         priceElement.placeholder = 10000;
         break;
-      default:
-        throw new Error('unknown type');
     }
   };
 
