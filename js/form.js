@@ -4,6 +4,10 @@
   var PIN_MAIN_WIDTH = 32;
   var PIN_MAIN_HEIGHT = 32;
   var ESC_KEYCODE = 27;
+  var MIN_PRICE_BUNGALO = 0;
+  var MIN_PRICE_FLAT = 1000;
+  var MIN_PRICE_HOUSE = 5000;
+  var MIN_PRICE_PALACE = 10000;
   var ROOM_VALIDATION_ERROR = 'Количество комнат не соответствует количеству гостей';
   var fieldsetElements = document.querySelectorAll('.ad-form__element');
   var fieldsetHeaderElement = document.querySelector('.ad-form-header');
@@ -76,20 +80,20 @@
   var setPrice = function (typeValue) {
     switch (typeValue) {
       case 'bungalo':
-        priceElement.min = 0;
-        priceElement.placeholder = 0;
+        priceElement.min = MIN_PRICE_BUNGALO;
+        priceElement.placeholder = MIN_PRICE_BUNGALO;
         break;
       case 'flat':
-        priceElement.min = 1000;
-        priceElement.placeholder = 1000;
+        priceElement.min = MIN_PRICE_FLAT;
+        priceElement.placeholder = MIN_PRICE_FLAT;
         break;
       case 'house':
-        priceElement.min = 5000;
-        priceElement.placeholder = 5000;
+        priceElement.min = MIN_PRICE_HOUSE;
+        priceElement.placeholder = MIN_PRICE_HOUSE;
         break;
       case 'palace':
-        priceElement.min = 10000;
-        priceElement.placeholder = 10000;
+        priceElement.min = MIN_PRICE_PALACE;
+        priceElement.placeholder = MIN_PRICE_PALACE;
         break;
     }
   };

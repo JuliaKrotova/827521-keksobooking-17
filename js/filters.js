@@ -1,5 +1,8 @@
 'use strict';
 (function () {
+  var ANY_VALUE = 'any';
+  var PRICE_LEVEL_1 = 10000;
+  var PRICE_LEVEL_2 = 50000;
   var housingTypeElement = document.querySelector('#housing-type');
   var housingPriceElement = document.querySelector('#housing-price');
   var housingRoomsElement = document.querySelector('#housing-rooms');
@@ -13,28 +16,28 @@
   var housingFeatures;
 
   var housingTypeFilter = function (pin) {
-    return housingType === 'any' || pin.offer.type === housingType;
+    return housingType === ANY_VALUE || pin.offer.type === housingType;
   };
 
   var housingPriceFilter = function (pin) {
     switch (housingPrice) {
       case 'middle':
-        return pin.offer.price >= 10000 && pin.offer.price <= 50000;
+        return pin.offer.price >= PRICE_LEVEL_1 && pin.offer.price <= PRICE_LEVEL_2;
       case 'low':
-        return pin.offer.price < 10000;
+        return pin.offer.price < PRICE_LEVEL_1;
       case 'high':
-        return pin.offer.price > 50000;
+        return pin.offer.price > PRICE_LEVEL_2;
       default:
         return true;
     }
   };
 
   var housingRoomsFilter = function (pin) {
-    return isNaN(housingRooms) || pin.offer.rooms === housingRooms;
+    return housingRooms === ANY_VALUE || pin.offer.rooms === housingRooms;
   };
 
   var housingGuestsFilter = function (pin) {
-    return isNaN(housingGuests) || pin.offer.guests === housingGuests;
+    return housingGuests === ANY_VALUE || pin.offer.guests === housingGuests;
   };
 
   var housingFeaturesFilter = function (pin) {
@@ -45,9 +48,18 @@
 
   var applyFilter = function (mapPins) {
     housingType = housingTypeElement.value;
-    housingRooms = parseInt(housingRoomsElement.value, 10);
     housingPrice = housingPriceElement.value;
+
+    housingRooms = parseInt(housingRoomsElement.value, 10);
+    if (isNaN(housingRooms)) {
+      housingRooms = housingRoomsElement.value;
+    }
+
     housingGuests = parseInt(housingGuestsElement.value, 10);
+    if (isNaN(housingGuests)) {
+      housingGuests = housingGuestsElement.value;
+    }
+
     housingFeaturesCheckedElements = Array.from(housingFeaturesElement.querySelectorAll('input:checked'));
     housingFeatures = housingFeaturesCheckedElements.map(function (element) {
       return element.value;

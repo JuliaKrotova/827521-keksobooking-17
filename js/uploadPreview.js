@@ -60,8 +60,8 @@
   };
 
   var getDraggableElementIndex = function (element) {
-    var photoArray = Array.from(document.querySelectorAll('.ad-form__photo img'));
-    return photoArray.indexOf(element);
+    var photosArray = Array.from(document.querySelectorAll('.ad-form__photo img'));
+    return photosArray.indexOf(element);
   };
 
   previewPhotoContainerElement.addEventListener('dragstart', function (evt) {
@@ -73,8 +73,8 @@
   };
 
   var dragEnd = function () {
-    var photoArray = Array.from(document.querySelectorAll('.ad-form__photo'));
-    previewPhotoContainerElement.insertBefore(photoArray[sourceDragIndex], photoArray[destDragIndex]);
+    var photosArray = Array.from(document.querySelectorAll('.ad-form__photo'));
+    previewPhotoContainerElement.insertBefore(photosArray[sourceDragIndex], photosArray[destDragIndex]);
   };
 
   window.uploadPreview = {
